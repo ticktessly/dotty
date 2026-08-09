@@ -45,7 +45,7 @@ echo "==> Linking tmux config"
 if [ -e ~/.tmux.conf ] && [ ! -L ~/.tmux.conf ]; then
   mv ~/.tmux.conf ~/.tmux.conf.bak."$(date +%s)"
 fi
-ln -sf "$DOTFILES_DIR/tmux/.tmux.conf" ~/.tmux.conf
+ln -sf "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf
 
 
 echo "==> Done. Open a new shell (or 'source $SHELL_RC') and run 'nvim' to let lazy.nvim install plugins."
