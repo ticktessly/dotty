@@ -18,24 +18,10 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DOTFILES_DIR"
 
 # 3. Stow packages
-# Option A: If your repo is organized into package directories (git/, bash/, nvim/, etc.)
-for dir in */; do
-    # Ensure it's an actual directory (and not an unmatched glob)
-    [ -d "$dir" ] || continue
-
-    # Strip trailing slash
-    dir="${dir%/}"
-
-    # Skip hidden directories (like .git)
-    case "$dir" in
-        .*) continue ;;
-    esac
-
-    echo "Stowing package: $dir"
-    stow --restow --target="$HOME" "$dir"
-done
-
-# Option B: If your repo is NOT organized in subfolders, use this instead of the loop above:
-# stow --restow --target="$HOME" .
+# This repo is NOT organized into per-tool subfolders (git/, bash/, nvim/, etc.) —
+# the dotfiles (.config/, .p10k.zsh, .zshrc, ...) live directly in the repo root,
+# so it must be stowed as a single package, excluding repo-management files.
+echo "Stowing package: $(basename "$DOTFILES_DIR")"
+stow --restow --target="$HOME" --ignore='^install\.sh$' --ignore='^README\.md$' --ignore='^\.git$' .
 
 echo "=== Dotfiles setup complete! ==="
