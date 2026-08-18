@@ -24,14 +24,19 @@ cd "$DOTFILES_DIR"
 STOW_ARGS="--restow --target=$HOME --ignore=^install\.sh$ --ignore=^README\.md$ --ignore=^\.git$ ."
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d%H%M%S)"
 
+# --restow's dry-run reports each conflict once per internal pass (unstow + stow),
+# so the same path can appear more than once here — dedupe before acting on it.
 conflicts="$(stow --no --verbose=2 $STOW_ARGS 2>&1 \
-    | sed -n 's/^.*existing target is neither a link nor a directory: //p')"
+    | sed -n 's/^.*existing target is neither a link nor a directory: //p' \
+    | sort -u)"
 
 if [ -n "$conflicts" ]; then
     echo "Found pre-existing dotfiles that conflict with stow. Backing them up to $BACKUP_DIR"
     echo "$conflicts" | while IFS= read -r rel; do
         [ -z "$rel" ] && continue
         src="$HOME/$rel"
+        # Already moved (e.g. duplicate report, or parent dir moved already) — skip.
+        [ -e "$src" ] || continue
         dest="$BACKUP_DIR/$rel"
         mkdir -p "$(dirname "$dest")"
         echo "  backing up $src -> $dest"
