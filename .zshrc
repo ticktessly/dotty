@@ -71,3 +71,5 @@ fi
 if [[ -f ~/.p10k.zsh && ( ! -f ~/.p10k.zsh.zwc || ~/.p10k.zsh -nt ~/.p10k.zsh.zwc ) ]]; then
   zcompile ~/.p10k.zsh
 fi
+
+eval "$(~/.local/bin/mise activate zsh)"
