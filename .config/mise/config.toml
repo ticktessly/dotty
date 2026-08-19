@@ -2,3 +2,4 @@
 herdr = "0.8.0"
 neovim = "0.12.4"
 ripgrep = "15.2.0"
+zoxide = "0.10.0"
